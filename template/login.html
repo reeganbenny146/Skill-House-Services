@@ -1,0 +1,29 @@
+{% extends 'base.html'%}
+
+{%block title %} Login {% endblock %}
+{% block content %} 
+    <div class="container-fluid row justify-content-center mt-3">
+        <div class="col-8">
+            <h1 class="text-center">Skill House Services</h1>
+        </div>
+        <div class="container-fluid row justify-content-center border col-8">
+            <div class="col-6">
+                <h1 class="text-center">Login to SkillHouse</h1>
+                <form action="" method="post">
+                    <div class="form-group mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email" name = "email">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="password" class="form-label">Password:</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter your password" name = "password">
+                    </div>
+                    <div class="form-group m-3">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
