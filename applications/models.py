@@ -94,8 +94,8 @@ class Users(db.Model):
     password = db.Column(db.String(20), nullable = False)
     role = db.Column(db.String(10), nullable = False,default= 'admin') 
 
-    customerList = db.relationship('Customer', backref = 'users', lazy =True, uselist = False)
-    professionalList = db.relationship('Professional', backref = 'users', lazy =True, uselist = False)
+    customerList = db.relationship('Customers', backref = 'users', lazy =True, uselist = False)
+    professionalList = db.relationship('Professionals', backref = 'users', lazy =True, uselist = False)
 
 class Customers(db.Model):
     __tablename__ = 'customers'
@@ -107,7 +107,7 @@ class Customers(db.Model):
     address = db.Column(db.String(100), nullable = False)
     pinCode = db.Column(db.Integer, nullable = False)
 
-    serviceHistoryList = db.relationship("ServiceHistory", backref= 'customers', lazy= True)
+    serviceHistoryList = db.relationship('ServiceHistory', backref= 'customers', lazy= True)
 
 
 
@@ -119,7 +119,7 @@ class Professionals(db.Model):
     name = db.Column(db.String(20), nullable= False)
     serviceId = db.Column(db.Integer, db.ForeignKey('services.id'), nullable= False)
     experience = db.Column(db.Integer, nullable= False)
-    createdDate = db.Column(db.Date, default= datetime.utcnow, nullable = False)
+    createdDate = db.Column(db.Date, default= datetime.now(), nullable = False)
     resumePath = db.Column(db.String(100), nullable = False)
     mobileNo = db.Column(db.String(10), nullable = False)
     address = db.Column(db.String(100), nullable = False)
@@ -134,7 +134,7 @@ class ServiceHistory(db.Model):
     __tablename__ = 'serviceHistory'
 
     id = db.Column(db.Integer, primary_key = True, nullable=False)
-    dateRequested = db.Column(db.Date, default= datetime.utcnow, nullable = False)
+    dateRequested = db.Column(db.Date, default= datetime.now(), nullable = False)
     dateAccepted = db.Column(db.Date, nullable = False)
     dateCompleted = db.Column(db.Date, nullable = False)
     customerId = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable= False)
@@ -152,4 +152,4 @@ class Services(db.Model):
     basePrice = db.Column(db.Integer, nullable= False)
 
     professionalList = db.relationship("Professionals", backref = "services", lazy = True)
-    serviceHistoryList = db.relationship("serviceHistory", backref = "services", lazy = True)
+    serviceHistoryList = db.relationship("ServiceHistory", backref = "services", lazy = True)

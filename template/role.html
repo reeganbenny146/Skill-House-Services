@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{%block title %} Login {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="../static/css/role.css">
+{% endblock %}
+
+{% block content %} 
+{% include 'nav.html'%}
+
+
+<!-- {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class='alert alert-warning'>
+        {% for message in messages %}
+        <li class=''>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %} -->
+
+
+<!-- {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="mt-4">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %} -->
+
+<div class="container text-center mt-5 rol">
+    {%include 'messages.html' %}
+    <h2 class="h3 font-weight-bold mt-5">Join as a Professional or Client</h2>
+</div>
+
+<div class="container mt-5 d-flex justify-content-center">
+    <form action={{url_for('role')}} method="post">
+        <div class="row">
+            <!-- Option 1: Client -->
+            <div class="col-md-6 d-flex justify-content-center">
+                <label>
+                    <input type="radio" name="userType" value="client" id="radio1">
+                    <div class="card p-3 shadow-sm text-center position-relative">
+                        <div class="icon mb-2">&#128100;</div> <!-- Unicode icon for user -->
+                        <p class="font-weight-bold mt-3">I'm a client, booking a service</p>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Option 2: Professional -->
+            <div class="col-md-6 d-flex justify-content-center">
+                <label>
+                    <input type="radio" name="userType" value="professional" id="radio2">
+                    <div class="card p-3 shadow-sm text-center position-relative">
+                        <div class="icon mb-2">&#128188;</div> <!-- Unicode icon for user -->
+                        <p class="font-weight-bold mt-3">I'm a professional, providing a service</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Join Now Button -->
+        <div class="text-center mt-5">
+            <button type="submit" class="btn btn-success btn-lg" style="border-radius: 20px;">Join Now!</button>
+        </div>
+    </form>
+</div>
+<div class="text-center mt-3">
+    <p>Already have an account? <a href={{url_for('login')}} class="text-success"><strong>Log In</strong></a></p>
+</div>
+
+
+
+
+<!-- {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %} -->
+
+
+
+{% endblock %}
+
+
+

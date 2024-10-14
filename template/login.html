@@ -1,29 +1,40 @@
 {% extends 'base.html'%}
 
 {%block title %} Login {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="../static/css/login.css">
+{% endblock %}
+
+
 {% block content %} 
-    <div class="container-fluid row justify-content-center mt-3">
-        <div class="col-8">
-            <h1 class="text-center">Skill House Services</h1>
-        </div>
-        <div class="container-fluid row justify-content-center border col-8">
-            <div class="col-6">
-                <h1 class="text-center">Login to SkillHouse</h1>
-                <form action="" method="post">
-                    <div class="form-group mb-3">
-                        <label for="email" class="form-label">Email:</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email" name = "email">
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="password" class="form-label">Password:</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter your password" name = "password">
-                    </div>
-                    <div class="form-group m-3">
-                        <button type="submit" class="btn btn-primary">Login</button>
-                    </div>
-                </form>
+<div class="container text-center mt-5">
+    <h1><strong>SKILL HOUSE SERVICES</strong></h1>
+</div>
+
+<!-- Login Box -->
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    <div class="card shadow p-4 col-6 login" style="width: 400px; border-radius: 15px;">
+        <h3 class="text-center mb-4">Login to SkillHouse</h3>
+        {%include 'messages.html' %}
+        <form action={{url_for('login')}} method="post">
+            <div class="form-group">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" id="email" name ="email" placeholder="Enter your email" required>
             </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-success btn-lg mt-4 col-3 justify-content-center" style="border-radius: 20px;">Login</button>
+            </div>
+        </form>
+        <div class="text-center mt-3">
+            <p>Don’t have a SkillHouse account? <a href={{url_for('role')}} class="text-success"><strong>Sign Up</strong></a></p>
         </div>
     </div>
+</div>
 
 {% endblock %}
+

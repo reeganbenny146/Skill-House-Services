@@ -1,0 +1,40 @@
+span{
+    font-weight: 650;
+}
+
+.rol{
+    padding-top: 0.1em;
+}
+
+.card {
+    width: 350px; 
+    height: 200px; 
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.icon {
+    font-size: 60px; 
+}
+
+input[type="radio"] {
+    display: none; 
+}
+
+input[type="radio"]:checked + .card {
+    border: 2px solid green;
+}
+
+
+label {
+    display: block; 
+}
+
+.text-success{
+    text-decoration: underline;
+}

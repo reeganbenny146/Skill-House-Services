@@ -1,0 +1,95 @@
+
+{% extends 'base.html' %}
+
+{%block title %} Registration {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="../static/css/registration.css">
+{% endblock %}
+
+{% block content %} 
+{% include 'nav.html'%}
+    <div class="container reg">
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-8">
+                {%if  user_role == 'professional'%}
+                    <h2 class="text-center fw-lighter">Sign Up to find work</h2>
+                {%else%}
+                    <h2 class="text-center fw-lighter">Sign Up to book a service</h2>
+                {%endif%}
+                <form class="mt-4">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="firstName">First Name</label>
+                            <input type="text" name = "firstName" class="form-control" id="firstName" placeholder="Enter your First Name">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" name = "lastName" class="form-control" id="lastName" placeholder="Enter your Last Name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email <span class="text-danger">*</span></label>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password <span class="text-danger">*</span></label>
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Enter your password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cpassword">Confirm Password :<span class="text-danger">*</span></label>
+                        <input type="password" name="cpassword" class="form-control" id="cpassword" placeholder="Re-enter your password">
+                    </div>
+
+                    {%if  user_role == 'professional'%}
+
+                        <div class="form-group">
+                            <label for="serviceType">Service Type <span class="text-danger">*</span></label>
+                            <select class="form-control" name="serviceType" id="serviceType" name="service_type" required>
+                                <option value="" disabled selected>Select a service type</option>
+                                <option value="plumbing">Plumbing</option>
+                                <option value="electrical">Electrical</option>
+                                <option value="carpentry">Carpentry</option>
+                                <option value="cleaning">Cleaning</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="experience">Years of Experience <span class="text-danger">*</span></label>
+                            <input type="number" name="experience" class="form-control" id="experience" name="experience" min="0" placeholder="Enter your years of experience" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profilePhoto">Upload your resume</label>
+                            <input type="file" name ="resume" class="form-control-file" id="profilePhoto" name="profile_photo" accept="image/*" required>
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea class="form-control" name="address" id="address" rows="3" placeholder="Enter your address"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="tel" name="mobileNumber" class="form-control" id="mobile" placeholder="Enter your mobile number">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pincode">Enter Pin Code:</label>
+                        <input type="text" name="pinCode" id="pincode" class="form-control" name="pincode" pattern="\d{6}" maxlength="6" title="Please enter a valid 6-digit pin code" placeholder="Enter your pincode" required>
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success btn-lg mt-4 col-3 justify-content-center" style="border-radius: 20px;">Sign Up</button>
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <p>Already have an account? <a href={{url_for('login')}} class="text-success"><strong>Log In</strong></a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
