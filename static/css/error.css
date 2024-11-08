@@ -1,0 +1,34 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f8f9fa;
+}
+.errContainer {
+    text-align: center;
+    max-width: 500px;
+    padding: 40px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.warning {
+    font-size: 80px;
+    color: #dc3545;
+    margin-bottom: 20px;
+}
+.errHeading {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+.errMessage {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+.btn-home {
+    border-radius: 20px;
+}

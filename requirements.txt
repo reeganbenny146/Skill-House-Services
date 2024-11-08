@@ -2,3 +2,4 @@ flask
 flask-sqlalchemy
 pandas
 numpy
+flask_restful

@@ -1,0 +1,93 @@
+
+{%extends 'base.html'%}
+{%block title%}
+Home
+{%endblock%}
+{%block extra_css%} 
+<link rel="stylesheet" href="../static/css/dashboard.css">
+{% endblock%}
+
+{%block content%}
+{% include 'nav.html'%}
+
+    <div class="container dashboard-content mt-5">
+        <!-- Services Category Table -->
+        <h4 class="table-title">Categories:</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Category Name</th>
+                    <th>No. of Services</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Sample Row -->
+                <tr>
+                    <td>1</td>
+                    <td>Plumbing</td>
+                    <td>5</td>
+                    <td>
+                        <a href="#" type="button" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="#" type="button" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="text-right"><a href="#" class="btn btn-outline-success">+ New Category</a></p>
+
+        <!-- Services Table -->
+        <h4 class="table-title">Services:</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Service Name</th>
+                    <th>Base Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Sample Row -->
+                <tr>
+                    <td>1</td>
+                    <td>Basic Plumbing</td>
+                    <td>$50</td>
+                    <td>
+                        <a href="" type="button" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="" type="button" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="text-right"><a href="#" class="btn btn-outline-success">+ New Services</a></p>
+
+        <!-- Professionals Table -->
+        <h4 class="table-title">Professionals:</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Experience (in Yrs)</th>
+                    <th>Service Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Sample Row -->
+                <tr>
+                    <td>1</td>
+                    <td>John Doe</td>
+                    <td>8</td>
+                    <td>Plumbing</td>
+                    <td>
+                        <a href="#" type="button" class="btn btn-success btn-sm">Accept</a>
+                        <a href="#" type="button" class="btn btn-danger btn-sm">Reject</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

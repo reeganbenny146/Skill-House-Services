@@ -1,0 +1,18 @@
+{%extends 'base.html'%}
+{%block title%} Error {%endblock%}
+{%block extra_css%}
+<link rel="stylesheet" href="../static/css/error.css">
+{%endblock%}
+
+{%block content%}
+
+    <div class="errContainer">
+        <div class="warning">&#9888;</div> 
+        <p class="errHeading">Something went wrong</p>
+
+        <p class="errMessage">We're sorry for the inconvenience. Please try again later or go back to the homepage.</p>
+
+        <a href={{url_for('dashboard')}} class="btn btn-danger btn-home">Go to Homepage</a>
+    </div>
+
+{%endblock%}

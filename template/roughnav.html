@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <style>
+    /* General layout styles */
+    body {
+      background-color: #f5f7fa;
+    }
+    .sidebar {
+      height: 100vh;
+      background-color: #fff;
+      border-right: 1px solid #e6e6e6;
+      padding-top: 20px;
+    }
+    .sidebar .nav-link {
+      color: #666;
+      font-weight: 500;
+    }
+    .sidebar .nav-link.active {
+      background-color: #e6e6e6;
+      color: #4a00e0;
+      border-radius: 8px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #fff;
+      padding: 10px 20px;
+      border-bottom: 1px solid #e6e6e6;
+    }
+    .search-bar {
+      width: 100%;
+      max-width: 400px;
+    }
+    .profile-menu img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    .card {
+      border: none;
+    }
+    .table-responsive {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .pagination a {
+      color: #4a00e0;
+    }
+    .badge-primary {
+      background-color: #4a00e0;
+    }
+    .btn-purple {
+      background-color: #4a00e0;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <nav class="col-md-2 d-none d-md-block sidebar">
+      <div class="sidebar-sticky">
+        <a class="navbar-brand pl-3" href="#"><strong>Skill House Service</strong></a>
+        <ul class="nav flex-column mt-4">
+          <li class="nav-item">
+            <a class="nav-link active" href="#"><i class="fas fa-tachometer-alt mr-2"></i> Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-shopping-cart mr-2"></i> Orders</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-user-friends mr-2"></i> Customers</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-comments mr-2"></i> Messages</a>
+          </li>
+          <li class="nav-item mt-4">
+            <small class="text-muted pl-3">TOOLS</small>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-box mr-2"></i> Products</a>
+          </li>
+          <!-- Add more sidebar items as needed -->
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main role="main" class="col-md-10 ml-sm-auto col-lg-10 px-4">
+      <!-- Header with Search and Profile -->
+      <div class="header d-flex align-items-center">
+        <input class="form-control search-bar" type="search" placeholder="Search..." aria-label="Search">
+        <div class="profile-menu ml-auto">
+          <img src="https://via.placeholder.com/40" alt="Profile Image">Name of user
+        </div>
+      </div>
+
+      <!-- Customer List Section -->
+      <div class="content mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4>Customers</h4>
+          <div>
+            <button class="btn btn-outline-secondary">Export</button>
+            <button class="btn btn-purple">+ Add Customers</button>
+          </div>
+        </div>
+
+        <!-- Tabs for Customer Filter -->
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">All Customers</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">New Customers</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">From Europe</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Asia</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Others</a>
+          </li>
+        </ul>
+
+        <!-- Customer Table -->
+        <div class="table-responsive mt-3">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th><input type="checkbox"></th>
+                <th>Customer</th>
+                <th>Email</th>
+                <th>Location</th>
+                <th>Orders</th>
+                <th>Spent</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="checkbox"></td>
+                <td><img src="https://via.placeholder.com/30" class="rounded-circle mr-2"> Ramisa Sanjana</td>
+                <td>ramisa@gmail.com</td>
+                <td>14 Clifton Down Road, UK</td>
+                <td>7</td>
+                <td>$3331.00</td>
+                <td><button class="btn btn-sm btn-light"><i class="fas fa-ellipsis-h"></i></button></td>
+              </tr>
+              <!-- Repeat rows as needed -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center mt-4">
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item active"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item"><a class="page-link" href="#">...</a></li>
+            <li class="page-item"><a class="page-link" href="#">24</a></li>
+          </ul>
+        </nav>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Include Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
