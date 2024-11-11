@@ -11,83 +11,351 @@ Home
 {% include 'nav.html'%}
 
     <div class="container dashboard-content mt-5">
-        <!-- Services Category Table -->
-        <h4 class="table-title">Categories:</h4>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Category Name</th>
-                    <th>No. of Services</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Sample Row -->
-                <tr>
-                    <td>1</td>
-                    <td>Plumbing</td>
-                    <td>5</td>
-                    <td>
-                        <a href="#" type="button" class="btn btn-primary btn-sm">Edit</a>
-                        <a href="#" type="button" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <p class="text-right"><a href="#" class="btn btn-outline-success">+ New Category</a></p>
+        {%include 'messages.html'%}
+        {% if user.role == 'admin' %}
+            <!--Category Table -->
+            <h4 class="table-title">Categories:</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Category Name</th>
+                        <th>No. of Services</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in catogeries%}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{category.name}}</td>
+                            <td>{{category.services | length }}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#categoryEditModal" data-id={{category.id}} data-name={{category.name}}>
+                                    Edit
+                                </button>
+                                <a href={{url_for('deleteCategory', categoryId = category.id )}} type="button" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+            <!-- Edit category Modal-->
+            <div class="modal fade" id="categoryEditModal" tabindex="-1" role="dialog" aria-labelledby="categoryEditModal" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="categoryEditModal">Edit Category</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action={{url_for('editCategory')}} method="post">
+                                <div class="form-group">
+                                    <label for="categoryName" class="col-form-label">Category Name:</label>
+                                    <input type="text" class="form-control" id="categoryName" name="categoryName" required>
+                                </div>
+                                <input type="text" class="form-control" id="categoryId" name ="categoryId" hidden>
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-success btn-sm mt-4 col-3 justify-content-center" style="border-radius: 20px;">Edit</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-right"><button class="btn btn-outline-success" data-toggle="modal" data-target="#newCategoryModal">+ New Category</button></p>
 
-        <!-- Services Table -->
-        <h4 class="table-title">Services:</h4>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Service Name</th>
-                    <th>Base Price</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Sample Row -->
-                <tr>
-                    <td>1</td>
-                    <td>Basic Plumbing</td>
-                    <td>$50</td>
-                    <td>
-                        <a href="" type="button" class="btn btn-primary btn-sm">Edit</a>
-                        <a href="" type="button" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <p class="text-right"><a href="#" class="btn btn-outline-success">+ New Services</a></p>
+            <!-- New category Modal-->
+            <div class="modal fade" id="newCategoryModal" tabindex="-1" role="dialog" aria-labelledby="newCategoryModal" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newCategoryModal">Add New Category</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action={{url_for('addNewCategory')}} method="post">
+                                <div class="form-group">
+                                    <label for="categoryName" class="col-form-label">Category Name:</label>
+                                    <input type="text" class="form-control" id="categoryName" name = "categoryName" required>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-success btn-sm mt-4 col-3 justify-content-center" style="border-radius: 20px;">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <!-- Professionals Table -->
-        <h4 class="table-title">Professionals:</h4>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Experience (in Yrs)</th>
-                    <th>Service Name</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Sample Row -->
-                <tr>
-                    <td>1</td>
-                    <td>John Doe</td>
-                    <td>8</td>
-                    <td>Plumbing</td>
-                    <td>
-                        <a href="#" type="button" class="btn btn-success btn-sm">Accept</a>
-                        <a href="#" type="button" class="btn btn-danger btn-sm">Reject</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <!-- Services Table -->
+            <h4 class="table-title">Services:</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Service Name</th>
+                        <th>Base Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Row -->
+                    <tr>
+                        <td>1</td>
+                        <td>Basic Plumbing</td>
+                        <td>$50</td>
+                        <td>
+                            <a href="" type="button" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="" type="button" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Edit Service Modal-->
+            <!-- <div class="modal fade" id="serviceEditModal" tabindex="-1" role="dialog" aria-labelledby="serviceEditModal" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="serviceEditModal">Edit Service</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action={{url_for('editServices')}} method="post">
+                                <div class="form-group">
+                                    <label for="serviceName" class="col-form-label">Service Name:</label>
+                                    <input type="text" class="form-control" id="serviceName" name="serviceName">
+                                </div>
+                                <div class="form-group">
+                                    <label for="serviceType">Service Type <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="serviceType" id="serviceType" name="service_type" required>
+                                        <option value="" disabled selected>Select a service type</option>
+                                        <option value="1">Plumbing</option>
+                                        <option value="2">Electrical</option>
+                                        <option value="3">Carpentry</option>
+                                        <option value="4">Cleaning</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="experience">Years of Experience <span class="text-danger">*</span></label>
+                                    <input type="number" name="experience" class="form-control" id="experience" name="experience" min="0" placeholder="Enter your years of experience" required>
+                                </div>
+                                <input type="text" class="form-control" id="categoryId" name ="categoryId" hidden>
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-success btn-sm mt-4 col-3 justify-content-center" style="border-radius: 20px;">Edit</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <p class="text-right"><a href="#" class="btn btn-outline-success">+ New Services</a></p>
+
+            <!-- Professionals Table -->
+            <h4 class="table-title">Professionals:</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Experience (in Yrs)</th>
+                        <th>Service Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Row -->
+                    <tr>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>8</td>
+                        <td>Plumbing</td>
+                        <td>
+                            <a href="#" type="button" class="btn btn-success btn-sm">Accept</a>
+                            <a href="#" type="button" class="btn btn-danger btn-sm">Reject</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        {% elif user.role == 'professional' %}
+            <!-- Services Category Table -->
+            <h4 class="table-title">Categories:</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Category Name</th>
+                        <th>No. of Services</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Row -->
+                    <tr>
+                        <td>1</td>
+                        <td>Plumbing</td>
+                        <td>5</td>
+                        <td>
+                            <a href="#" type="button" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="#" type="button" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="text-right"><a href="#" class="btn btn-outline-success">+ New Category</a></p>
+
+            <!-- Services Table -->
+            <h4 class="table-title">Services:</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Service Name</th>
+                        <th>Base Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Row -->
+                    <tr>
+                        <td>1</td>
+                        <td>Basic Plumbing</td>
+                        <td>$50</td>
+                        <td>
+                            <a href="" type="button" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="" type="button" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="text-right"><a href="#" class="btn btn-outline-success">+ New Services</a></p>
+
+            <!-- Professionals Table -->
+            <h4 class="table-title">Professionals:</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Experience (in Yrs)</th>
+                        <th>Service Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Row -->
+                    <tr>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>8</td>
+                        <td>Plumbing</td>
+                        <td>
+                            <a href="#" type="button" class="btn btn-success btn-sm">Accept</a>
+                            <a href="#" type="button" class="btn btn-danger btn-sm">Reject</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        {%elif user.role == 'customer' %}
+            <!-- Services Category Table -->
+            <h4 class="table-title">Categories:</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Category Name</th>
+                        <th>No. of Services</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Row -->
+                    <tr>
+                        <td>1</td>
+                        <td>Plumbing</td>
+                        <td>5</td>
+                        <td>
+                            <a href="#" type="button" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="#" type="button" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="text-right"><a href="#" class="btn btn-outline-success">+ New Category</a></p>
+
+            <!-- Services Table -->
+            <h4 class="table-title">Services:</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Service Name</th>
+                        <th>Base Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Row -->
+                    <tr>
+                        <td>1</td>
+                        <td>Basic Plumbing</td>
+                        <td>$50</td>
+                        <td>
+                            <a href="" type="button" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="" type="button" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="text-right"><a href="#" class="btn btn-outline-success">+ New Services</a></p>
+
+            <!-- Professionals Table -->
+            <h4 class="table-title">Professionals:</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Experience (in Yrs)</th>
+                        <th>Service Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample Row -->
+                    <tr>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>8</td>
+                        <td>Plumbing</td>
+                        <td>
+                            <a href="#" type="button" class="btn btn-success btn-sm">Accept</a>
+                            <a href="#" type="button" class="btn btn-danger btn-sm">Reject</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        {%endif%}
     </div>
 {% endblock %}
+{%block extra_js%} 
+{%if user.role == 'admin'%}
+    <script src="{{url_for('static', filename= 'js/admin.js')}}"></script>
+{%endif%}
+{% endblock%}

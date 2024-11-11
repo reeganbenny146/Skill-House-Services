@@ -1,0 +1,11 @@
+.navbar{
+    padding:0px 5px 0px 5px
+}
+
+#search-toggle:hover{
+    cursor: pointer;
+}
+.hidden{
+    display:none
+}
+ 

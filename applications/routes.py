@@ -1,35 +1,35 @@
 from main import app
 from flask import render_template, session, url_for, redirect, request ,flash
 from applications.models import *
+from flask_login import login_user, logout_user, current_user, login_required
 
 
 # User login routes
 @app.route('/login', methods=["GET","POST"])
 def login():
-
-    if 'email' in session:
+    if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
-    
     if request.method == "GET":
         return render_template('login.html')
     else:
         email = request.form.get('email',None)
         password = request.form.get('password', None)
-        print(email)
         if not email  or not password :
             flash(('Email and password must not empty..!!!','danger'))
             return redirect(url_for('login'))
         user = Users.query.filter_by(email = email).first()
-        print(vars(user))
         if not user:
             flash(('Please enter a valid email..!!!','danger'))
             return redirect(url_for('login'))
+        elif user.is_deleted:
+            flash((f'{user.email} was deleted by admin. Please contact admin @ admin@gmail.com.!!!','danger'))
+            return redirect(url_for('login'))
         else:
             if user.password == password:
-                # session['']
-                session['email'] = user.email
-                session['role'] = user.role
-                flash((user.email + 'have succesfully logged in!!', 'success'))
+                # session['email'] = user.email
+                # session['role'] = user.role
+                login_user(user)
+                flash((user.email + ' have succesfully logged in!!', 'success'))
                 return redirect(url_for('dashboard'))
             else:
                 flash(('invalid password..!!!','danger'))
@@ -38,6 +38,8 @@ def login():
 # User role select
 @app.route('/role',methods = ["GET","POST"])
 def role():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
     if request.method == 'GET':
         return render_template('role.html')
     else:
@@ -53,6 +55,8 @@ def role():
 @app.route('/registration',methods = ['GET', 'POST'])
 def registration():
     try:
+        if current_user.is_authenticated:
+            return redirect(url_for('dashboard'))
         if not session or not session['reg_user_role']:
             flash(('Please select a role.','danger'))
             return redirect(url_for('role'))
@@ -88,7 +92,6 @@ def registration():
 
                 file_ext = os.path.splitext(image.filename)[1]
                 new_filename = f"{sanitized_email}{file_ext}"
-                print("hi")
                 if image:
                     imageFilePath = 'images\\users\\' + new_filename
                     print(imageFilePath)
@@ -163,18 +166,68 @@ def registration():
 
 # User dashboard
 @app.route('/')
+@login_required
 def dashboard():
-    if 'email' not in session:
-        return redirect(url_for('login'))
+    user = Users.query.get(current_user.id)
+    catogeries = Categories.get_active_categories()
+    print(catogeries)
+    return render_template('dashboard.html',user= user, catogeries = catogeries)
+
+@app.route('/new_category', methods= ['POST'])
+@login_required
+def addNewCategory():
+    try:
+        name = request.form.get('categoryName')
+        category = Categories(name = name)
+        db.session.add(category)
+        db.session.commit()
+        flash((f" '{name}' category has succefully added", "success"))
+        return redirect(url_for('dashboard'))
+    except Exception as e:
+        db.session.rollback()
+        flash(("Error:"+str(e),'danger'))
+        return redirect(url_for('dashboard'))
     
-    return render_template('/dashboard.html')
+@app.route('/edit_category', methods= ['POST'])
+@login_required
+def editCategory():
+    try:
+        id = request.form.get('categoryId')
+        name = request.form.get('categoryName')
+        category = Categories.query.get(id)
+        category.name = name
+        db.session.commit()
+        flash((f"'{name}' category has succefully edited", "success"))
+        return redirect(url_for('dashboard'))
+    except Exception as e:
+        db.session.rollback()
+        flash(("Error:"+str(e),'danger'))
+        return redirect(url_for('dashboard'))
+
+@app.route('/delete_category/<int:categoryId>')
+@login_required
+def deleteCategory(categoryId):
+    try:
+        category = Categories.query.get(categoryId)
+        category.soft_delete()
+        db.session.commit() 
+        flash((f"'{category.name}' has succefully deleted", "success"))
+        return redirect(url_for('dashboard'))
+    except Exception as e:
+        db.session.rollback()
+        flash(("Error:"+str(e),'danger'))
+        return redirect(url_for('dashboard'))
+
 
 @app.route('/logout')
+@login_required
 def logout():
-    session.clear()
+    logout_user()
     return redirect(url_for('login'))
 
 
 @app.route('/error')
 def error():
-    return render_template('/error.html')
+    return render_template('error.html')
+
+

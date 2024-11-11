@@ -3,3 +3,4 @@ flask-sqlalchemy
 pandas
 numpy
 flask_restful
+flask_login
