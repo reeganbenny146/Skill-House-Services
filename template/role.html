@@ -10,31 +10,6 @@
 {% include 'nav.html'%}
 
 
-<!-- {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <ul class='alert alert-warning'>
-        {% for message in messages %}
-        <li class=''>{{ message }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-{% endwith %} -->
-
-
-<!-- {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div class="mt-4">
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-{% endwith %} -->
 
 <div class="container text-center mt-5 rol">
     {%include 'messages.html' %}

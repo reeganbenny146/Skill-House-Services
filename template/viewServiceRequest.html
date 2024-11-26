@@ -1,0 +1,118 @@
+
+{%extends 'base.html'%}
+{%block title%}
+Home
+{%endblock%}
+{%block extra_css%} 
+<link rel="stylesheet" href="../static/css/view.css">
+{% endblock%}
+
+{%block content%}
+{% include 'nav.html'%}
+
+  <div class="container view-content mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="details-card bg-light p-4">
+          <h2 class="text-center mb-4">Service Request Details</h2>
+          <!-- Example Service Details -->
+          <div class="mb-3">
+            <strong>Customer:</strong> 
+            {%if serviceRequest.customer %} 
+              {{serviceRequest.customer.fname ~" "~ serviceRequest.customer.lname}} 
+              {%if serviceRequest.customer.is_deleted %}
+                <span class="badge badge-danger">Deleted</span>
+              {%elif serviceRequest.customer.is_blocked %}
+                <span class="badge badge-danger">Blocked</span>
+              {%endif%}
+            {%else%}
+              N/A
+            {%endif%} 
+          </div>
+          <div class="mb-3">
+            <strong>Professional:</strong> 
+            {%if serviceRequest.professional %} 
+              {{serviceRequest.professional.fname ~" "~ serviceRequest.professional.lname}} 
+              {%if serviceRequest.professional.is_deleted %}
+                <span class="badge badge-danger">Deleted</span>
+              {%elif serviceRequest.professional.is_blocked %}
+                <span class="badge badge-danger">Blocked</span>
+              {%endif%}
+            {%else%}
+              N/A
+            {%endif%}
+          </div>
+          <div class="mb-3">
+            <strong>Service Name:</strong> {%if serviceRequest.service %} {{serviceRequest.service.name}} {%else%}N/A{%endif%}
+          </div>
+          <div class="mb-3">
+            <strong>Date Requested:</strong> {{serviceRequest.dateRequested}}
+          </div>
+          <div class="mb-3">
+            <strong>Date Accepted:</strong> {{serviceRequest.dateAccepted}}
+          </div>
+          <div class="mb-3">
+            <strong>Date Completed:</strong> {{serviceRequest.dateCompleted}}
+          </div>
+          <div class="mb-3">
+            <strong>Total Amount:</strong> 
+            &#8377; {%if serviceRequest.status == 2 or serviceRequest.professional %} 
+                      {{serviceRequest.service.basePrice + serviceRequest.professional.incentive }} ( &#8377;{{serviceRequest.service.basePrice}} + &#8377;{{serviceRequest.professional.incentive }})
+                    {%else%}
+                    N/A 
+                    {%endif%}
+          </div>
+          <div class="mb-3">
+            <strong>Status:</strong>
+            {%if serviceRequest.status == 0%}
+            <span class="badge badge-warning">Pending</span>
+            {%elif serviceRequest.status == 1%}
+            <span class="badge badge-primary">Accepted</span>
+            {%elif serviceRequest.status == 2%}
+            <span class="badge badge-info">Completed</span>
+            {%elif serviceRequest.status == 3 %}
+            <span class="badge badge-success">Closed</span>
+            {%elif serviceRequest.status == 4 %}
+            <span class="badge badge-danger">Rejected</span>
+            {%endif%}
+          </div>
+          <div class="mb-3">
+            <strong>Rating:</strong>
+            {%if serviceRequest.status == 3%}
+              {%if serviceRequest.reviews%}
+              {%for i in range(1,6)%}
+                  {%if i <= serviceRequest.reviews.rating%}
+                      <span class="rated">&#9733;</span>
+                  {% else %}
+                      <span class="not-rated">&#9733;</span>
+                  {% endif %}
+              {% endfor %}
+              {%else%}
+              <span class="alert alert-warning">Customer review pending</span>
+              {%endif%}
+            {%else%}
+              <span class="alert alert-warning">Customer needs to close the request</span>
+            {%endif%}
+          </div>
+          <div class="mb-3">
+            <strong>Remarks:</strong>
+            {%if serviceRequest.status == 3%}
+              {%if serviceRequest.reviews%}
+              {{serviceRequest.reviews.reviewText}}
+              {%else%}
+              <span class="alert alert-warning">Customer review pending</span>
+              {%endif%}
+            {%else%}
+              <span class="alert alert-warning">Customer needs to close the request</span>
+            {%endif%}
+          </div>
+          <!-- Action Buttons -->
+          <div class="d-flex justify-content-center">
+            <a href={{url_for('dashboard')}} class="btn btn-primary me-2" onclick="goBack()">Back</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

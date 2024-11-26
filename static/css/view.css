@@ -1,0 +1,19 @@
+.view-content {
+    padding-top: 30px;
+}
+
+.details-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.rated{
+    font-size: 20px;
+    color: #f5c518;
+}
+
+.not-rated{
+    font-size: 20px;
+    color: #ddd;
+}

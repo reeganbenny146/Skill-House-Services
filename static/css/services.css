@@ -1,0 +1,36 @@
+.service{
+    margin-top: 20px;
+    padding:20px
+}
+
+.service-card {
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 2px 2px 5px rgb(26 255 0 / 9%);
+    transition: transform 0.2s ease;
+  }
+
+.service-card:hover {
+cursor: pointer;
+border: 3px solid #6cef6c;
+transform: translateY(-1px);
+}
+
+.service-title {
+font-size: 1.2rem;
+font-weight: bold;
+}
+
+.service-description {
+font-size: 0.9rem;
+color: #6c757d;
+}
+
+.service-price {
+font-size: 1rem;
+font-weight: 600;
+}
+
+
+
+

@@ -6,3 +6,18 @@ $(categoryEditModal).on('show.bs.modal', function (event) {
     modal.find('.modal-body #categoryName').val(name)
     modal.find('.modal-body #categoryId').val(id)
   })
+
+$(serviceEditModal).on('show.bs.modal', function (event){
+  var button = $(event.relatedTarget)
+    var id = button.data('id') 
+    var name = button.data('name') 
+    var description = button.data('description') 
+    var categoryId = button.data('categoryid') 
+    var basePrice = button.data('baseprice')  
+    var modal = $(this)
+    modal.find('.modal-body #serviceId').val(id)
+    modal.find('.modal-body #serviceName').val(name)
+    modal.find('.modal-body #description').val(description)
+    modal.find('.modal-body #categoryId').val(categoryId)
+    modal.find('.modal-body #basePrice').val(basePrice)
+})

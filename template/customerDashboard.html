@@ -1,0 +1,162 @@
+<!-- List all Categories for client -->
+<div class="container my-4">
+    <h2 class="section-title text-center">Looking for?</h2>
+    <div class="row d-flex justify-content-around">
+        {% if categories | length == 0 %}
+        <div class="d-flex justify-content-center align-items-center w-100">
+            <div class="alert alert-warning text-center" role="alert">
+                No services available at this moment!
+            </div>
+        </div>
+        {%else%}
+        {% for category in categories%}
+        <a href = {{url_for('viewServices',categoryId = category.id)}} class="col-6 col-md-3 mb-3 ">
+        <div class="category-card">{{category.name}}</div>
+        </a>
+        {%endfor%}
+        {%endif%}
+    </div>
+</div>
+
+    <!-- Active Services Request table -->
+    <h4 class="table-title">Active Service Requests:</h4>
+    <div class="table-responsive" style="max-height: 500px;">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Service Name</th>
+                    <th>Date requested</th>
+                    <th>Professional Name</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% if activeServiceRequests | length == 0 %}
+            <tr class="table-warning">
+                <td colspan="6" class="text-center fw-semibold">No active Service requests</td>
+            </tr>
+            {%endif%}
+            {% for serviceRequest in activeServiceRequests %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{serviceRequest.service.name}}</td>
+                    <td>{{serviceRequest.dateRequested}}</td>
+
+                    {% if serviceRequest.is_requested %}
+                    <td>{{serviceRequest.professional.fname ~" "~ serviceRequest.professional.lname }}</td>
+                    {% elif serviceRequest.status != 0%}
+                    <td>{{serviceRequest.professional.fname ~" "~ serviceRequest.professional.lname }}</td>
+                    {%else%}
+                    <td>--</td>
+                    {%endif%}
+                    <td><span class="badge badge{% if serviceRequest.status == 0 %}-warning
+                        {% elif serviceRequest.status == 1 %}-primary{% elif serviceRequest.status == 2 %}-info{%endif%}">
+                        {% if serviceRequest.status == 0 %}Pending
+                        {% elif serviceRequest.status == 1 %}Accepted
+                        {%elif serviceRequest.status == 2 %} Completed
+                        {%endif%}
+                    </span></td>
+                    <td>
+                        {% if serviceRequest.status == 0 %}
+                        <a href={{url_for('deleteServiceRequest', serviceRequestId = serviceRequest.id)}} class="btn btn-danger btn-sm">Cancel Request</a>
+                        {%else%}
+                        <a href={{url_for('closeServiceRequest', serviceRequestId = serviceRequest.id)}} class="btn btn-success btn-sm">Close request</a>
+                        {%endif%}
+                    </td>
+                </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
+<!-- Customer Services History table -->
+<h4 class="table-title">Service Requests History:</h4>
+<div class="table-responsive" style="max-height: 500px;">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>#</th>
+                <th>Service Name</th>
+                <th>Date requested</th>
+                <th>Professional Name</th>
+                <th>Date Completed</th>
+                <th>Status</th>
+                <th>Review</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if serviceHistories | length == 0 %}
+            <tr class = "table-warning">
+                <td colspan="8" class="text-center fw-semibold">No available service History</td>
+            </tr>
+            {%endif%}
+            {% for serviceHistory in serviceHistories %}
+                <tr class="{% if serviceHistory.status == 0 %}table-active
+                            {% elif serviceHistory.status == 1 %}table-primary
+                            {% elif serviceHistory.status == 2 %}table-info
+                            {% elif serviceHistory.status == 3 %}table-success
+                            {% else %}table-danger
+                            {% endif %}">
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ serviceHistory.service.name }}</td>
+                    <td>{{ serviceHistory.dateRequested }}</td>
+                    <td>
+                        {% if serviceHistory.status != 0 and serviceHistory.professional %}
+                            {{ serviceHistory.professional.fname ~ " " ~ serviceHistory.professional.lname }}
+                        {%elif serviceHistory.is_requested %}
+                            {{ serviceHistory.professional.fname ~ " " ~ serviceHistory.professional.lname }}   
+                        {% else %}
+                            --
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if serviceHistory.status == 2 or serviceHistory.status == 3 %}
+                            {{ serviceHistory.dateCompleted }}
+                        {% else %}
+                            --
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge {% if serviceHistory.status == 0 %}badge-warning
+                                    {% elif serviceHistory.status == 1 %}badge-primary
+                                    {% elif serviceHistory.status == 2 %}badge-info
+                                    {% elif serviceHistory.status == 3 %}badge-success
+                                    {% else %}badge-danger
+                                    {% endif %}">
+                            {% if serviceHistory.status == 0 %}Pending
+                            {% elif serviceHistory.status == 1 %}Accepted
+                            {% elif serviceHistory.status == 2 %}Completed
+                            {% elif serviceHistory.status == 3 %}Closed
+                            {% else %}Rejected
+                            {% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        {% if serviceHistory.status == 3 or serviceHistory.reviews %}
+                            {%for i in range(1,6)%}
+                                {%if i <= serviceHistory.reviews.rating%}
+                                    <span class="rated">&#9733;</span>
+                                {% else %}
+                                    <span class="not-rated">&#9733;</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            --
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if serviceHistory.status == 0 %}
+                            <a href={{url_for('deleteServiceRequest', serviceRequestId = serviceHistory.id)}} class="btn btn-danger btn-sm">Cancel Request</a>
+                        {% elif serviceHistory.status == 1 or serviceHistory.status == 2 %}
+                            <a href={{url_for('closeServiceRequest', serviceRequestId = serviceHistory.id)}} class="btn btn-success btn-sm">Close request</a>
+                        {% else %}
+                            <a href={{url_for('viewServiceRequest', serviceRequestId = serviceHistory.id)}} class="btn btn-success btn-sm">View</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

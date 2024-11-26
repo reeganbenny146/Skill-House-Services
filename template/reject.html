@@ -1,0 +1,27 @@
+{%extends 'base.html'%}
+{%block title%} Error {%endblock%}
+{%block extra_css%}
+<link rel="stylesheet" href="../static/css/restrict.css">
+{%endblock%}
+
+{%block content%}
+{% include 'nav.html'%}
+
+<div class="container d-flex align-items-center justify-content-center vh-100">
+    <div class="card shadow-lg p-4" style="max-width: 500px; width: 100%;">
+        <div class="text-center">
+            <!-- Unicode for Rejected Icon -->
+            <div class="icon text-danger">&#10060;</div> <!-- ❌ -->
+            <h1 class="text-danger">Account Rejected</h1>
+            <p class="text-muted">Your account has been rejected. Please review the reason provided or contact the admin for further clarification.</p>
+        </div>
+        <div class="text-center mt-4">
+            <h5>Contact Support</h5>
+            <p>If you believe this is a mistake, please email us at <a href="mailto:admin@gmail.com" class="text-primary">admin@gmail.com</a>.</p>
+        </div>
+        <div class="text-center mt-3">
+            <a href="/" class="btn btn-primary btn-lg">Go to Home</a>
+        </div>
+    </div>
+</div>
+{%endblock%}

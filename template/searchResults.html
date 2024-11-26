@@ -12,17 +12,16 @@ Home
 
     <div class="container dashboard-content mt-5">
         {%include 'messages.html'%}
+        <h2>Search Results for:'{{searchOption}}' : '{{searchText}}'</h2>
         {% if user.role == 'admin' %}
-        {%include 'adminDashboard.html'%}
+        {%include 'adminSearchResults.html'%}
         {% elif user.role == 'professional' %}
-        {%include 'professionalDashboard.html'%}
+        {%include 'professionalSearchResults.html'%}
         {%elif user.role == 'client' %}
-        {%include 'customerDashboard.html'%}
+        {%include 'customerSearchResults.html'%}
         {%endif%}
     </div>
 {% endblock %}
 {%block extra_js%} 
-{%if user.role == 'admin'%}
-    <script src="{{url_for('static', filename= 'js/admin.js')}}"></script>
-{%endif%}
+    <script src="{{url_for('static', filename= 'js/search.js')}}"></script>
 {% endblock%}

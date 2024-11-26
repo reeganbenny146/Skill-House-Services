@@ -21,4 +21,35 @@
     padding-top: 5px;
 }
 
+.category-card {
+    font-weight: 500;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    color:black;
+    transition: transform 0.2s ease;
+    box-shadow: 2px 2px 5px rgb(26 255 0 / 9%);
+    margin: 10px;
+  }
+
+.category-card:hover {
+    cursor: pointer;
+    cursor: pointer;
+    border: 3px solid #6cef6c;
+    transform: translateY(-1px);
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+.rated{
+    font-size: 20px;
+    color: #f5c518;
+}
+
+.not-rated{
+    font-size: 20px;
+    color: #ffffff;
+}
 

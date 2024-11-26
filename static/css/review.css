@@ -1,0 +1,47 @@
+.review-conteiner{
+    padding-top: 30px;
+}
+
+.review-card{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .star-rating input[type="radio"] {
+    display: none;
+  }
+
+  .star-rating label {
+    font-size: 2rem;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .star-rating input[type="radio"]:checked ~ label {
+    color: #f5c518;
+  }
+
+  .star-rating label:hover,
+  .star-rating label:hover ~ label {
+    color: #f5c518;
+  }
+
+  .form-control {
+    border-radius: 8px;
+  }
+
+
+
+  .container {
+    margin-top: 50px;
+    max-width: 600px;
+  }

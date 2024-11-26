@@ -27,42 +27,67 @@
       </ul>
 
       <!-- Centered search form -->
-      <form class="form-inline mx-auto my-2 my-lg-0 hidden" id="search-box">
+      <form class="form-inline mx-auto my-2 my-lg-0 hidden" id="search-box" action={{url_for('search')}} method = "post">
         <div class="input-group">
           <div class="input-group-prepend">
-            <select class="custom-select col-md-4" id="search-select" aria-label="Search in">
-              <option selected>Search in...</option>
+            <select class="custom-select col-md-4" name="searchOption" id="search-select" aria-label="Search in" required>
+              <option selected disabled>Search in...</option>
               {% if user.role == 'admin'%}
               <option value="Categories">Categories</option>
               <option value="Services">Services</option>
               <option value="Professionals">Professionals</option>
               <option value="Customers">Customers</option>
               {%elif user.role == 'professional'%}
-              <option value="Services">Services</option> 
-              <option value="Customers">Customers</option>
+              <optgroup label = "Services from"></optgroup>
+              <option value="location">location</option> 
+              <option value="pinCode">Pin Code</option>
               {%else%}
               <option value="Categories">Categories</option>
               <option value="Services">Services</option>
               <option value="Professionals">Professionals</option>
+              <optgroup label = "Services in"></optgroup>
+              <option value="location">location</option> 
+              <option value="pinCode">Pin Code</option>
               {%endif%}
             </select>
-            <input type="text" class="form-control col-md-10" aria-label="Text input with dropdown button" placeholder="Enter the value to search">
+            <input type="text" name="searchText" class="form-control col-md-10" aria-label="Text input with dropdown button" placeholder="Enter the value to search" required>
             <button class="btn btn-outline-success my-2 ml-1 my-sm-0" type="submit">Search</button>
           </div>
         </div>
       </form>
 
       <!-- Profile image with dropdown on the right -->
+      {%if user.role == 'admin'%}
+        {% set profilephoto = user.adminDetails.profilePhotoPath %}
+      {%elif user.role == 'client' %}
+        {% set  profilephoto = user.customerDetails.profilePhotoPath %}
+      {%else%}
+        {% set profilephoto = user.professionalDetails.profilePhotoPath %}
+      {%endif%}
       <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src={{user.adminDetails.profilePhotoPath}} class="rounded-circle" alt="Profile" width="40" height="40">
-            <span>
-              &nbsp;{{ user.adminDetails.fname }}&nbsp;({{ user.role }}){% if user.status != 1 %}&#9888;{% endif %}
-          </span>
+            <img src={{profilephoto}} class="rounded-circle border border-{% if user.is_blocked or user.is_rejected %}danger{% elif not user.is_approved %}warning{%else%}success{%endif%}" alt="Profile" width="40" height="40" >
+            &nbsp;{% if user.is_blocked or user.is_rejected or not user.is_approved %}&#9888;{% endif %}
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
-            <a class="dropdown-item" href="#">Profile <span class="badge badge-{% if not user.status %}warning{% else %}success{%endif%}">{% if not user.status %}Pending{% else %}Approved{%endif%}</span> </a>
+            <div class="ml-1" id="userdetails">
+              {% if user.role == 'admin' %}
+              <span class="fw-bold" id ="name">{{ user.adminDetails.fname | capitalize ~ " " ~ user.adminDetails.lname | capitalize }}</span><br>
+              {% elif user.role == 'client'  %}
+              <span class="fw-bold" id ="name">{{ user.customerDetails.fname | capitalize ~ " " ~ user.customerDetails.lname | capitalize }}</span><br>
+              {% else %}
+              <span class="fw-bold" id ="name">{{ user.professionalDetails.fname | capitalize ~ " " ~ user.professionalDetails.lname | capitalize }}</span><br>
+              {% endif %}
+              <span id="userrole">{{ user.role }}</span><br>
+              {% if user.role == 'professional'%}
+              <span class="mt-1 badge badge-{% if user.is_blocked or user.is_rejected %}danger{% elif not user.is_approved or not user.professionalDetails.is_serviceAvailable  %}warning{% else %}success{%endif%}">{% if user.is_blocked %}Blocked{% elif user.is_rejected %}Rejected{%elif not user.professionalDetails.is_serviceAvailable %}Service Unavailable{% elif user.is_approved %}Approved{% else %}Pending{%endif%}</span><br>
+              {%else%}
+              <span class="mt-1 badge badge-{% if user.is_blocked or user.is_rejected %}danger{% elif not user.is_approved  %}warning{% else %}success{%endif%}">{% if user.is_blocked %}Blocked{% elif user.is_rejected %}Rejected{% elif user.is_approved %}Approved{% else %}Pending{%endif%}</span><br>
+              {%endif%}
+            </div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Profile</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href={{url_for('logout')}}>Logout</a>
           </div>

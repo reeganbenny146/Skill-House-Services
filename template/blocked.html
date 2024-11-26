@@ -1,0 +1,25 @@
+{%extends 'base.html'%}
+{%block title%} Error {%endblock%}
+{%block extra_css%}
+<link rel="stylesheet" href="../static/css/restrict.css">
+{%endblock%}
+
+{%block content%}
+{% include 'nav.html'%}
+    <div class="container vh-100 d-flex align-items-center justify-content-center">
+        <div class="card shadow-lg p-4" style="max-width: 500px; width: 100%;">
+            <div class="text-center">
+                <span class="warning">&#128683;</span>
+                <h1 class="text-danger">Account Blocked</h1>
+                <p class="text-muted">Unfortunately, your account has been blocked due to a policy violation or other issues. If you believe this is a mistake, please contact the administrator for assistance.</p>
+            </div>
+            <div class="text-center mt-4">
+                <h5>Contact Support</h5>
+                <p>Email: <a href="mailto:admin@gmail.com" class="text-primary">admin@gmail.com</a></p>
+            </div>
+            <div class="text-center mt-3">
+                <a href={{url_for('logout')}} class="btn btn-primary btn-lg">Logout</a>
+            </div>
+        </div>
+    </div>
+{%endblock%}

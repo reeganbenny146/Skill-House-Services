@@ -23,7 +23,7 @@
                     <div class="form-group text-center">
                         <label for="profileImage">Upload Profile Image</label>
                         <br>
-                        <img id="avatarPreview" class="avatar" src="static\images\default-user.jpg" alt="Profile Avatar">
+                        <img id="avatarPreview" class="avatar" src="../static/images/users/default-user.jpg" alt="Profile Avatar">
                         
                         <input type="file" class="form-control-file mt-2" id="profileImage" name="profileImage" accept="image/*" onchange="previewAvatar()">
                         <small class="form-text text-muted">Please upload a profile image (jpg, png, jpeg).</small>
@@ -38,6 +38,13 @@
                             <label for="lastName">Last Name</label>
                             <input type="text" name = "lastName" class="form-control" id="lastName" placeholder="Enter your Last Name">
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Username <span class="text-danger">*</span></label>
+                        <input type="text" name="username" class="form-control" id="username" placeholder="Enter your username" pattern="^[a-zA-Z0-9]{3,30}$"
+                        title="username should start in a character and only contains numbers and alphabet" required >
+                        <small class="form-text text-muted">start with a character and should only contains numbers and alphabets(min 3 letters).</small>
                     </div>
 
                     <div class="form-group">
@@ -59,22 +66,48 @@
                         <div class="form-group">
                             <label for="serviceType">Service Type <span class="text-danger">*</span></label>
                             <select class="form-control" name="serviceType" id="serviceType" name="service_type" required>
-                                <option value="" disabled selected>Select a service type</option>
-                                <option value="1">Plumbing</option>
-                                <option value="2">Electrical</option>
-                                <option value="3">Carpentry</option>
-                                <option value="4">Cleaning</option>
+                                <option value="" disabled selected>Select service you like to provide</option>
+                                {%for category in categories%}
+                                <optgroup label = {{category.name}}>
+                                    {%for service in category.services%}
+                                        <option value={{service.id}} data-baseprice={{service.basePrice}}>{{service.name}}</option>
+                                    {%endfor%}
+                                </optgroup>
+                                {%endfor%}
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="experience">Years of Experience <span class="text-danger">*</span></label>
-                            <input type="number" name="experience" class="form-control" id="experience" name="experience" min="0" placeholder="Enter your years of experience" required>
+                        <div class="form-row form-group">
+                            <div class="col-md-6">
+                                <label for="basicpay">Basic Pay</label>
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroupPrepend1">&#8377;</span>
+                                  </div>
+                                  <input type="number" class="form-control" id="basicpay" placeholder = "N/A" aria-describedby="inputGroupPrepend1" readonly>
+                                </div>
+                              </div>
+                            <div class="col-md-6">
+                              <label for="incentive">Incentive</label>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text" id="inputGroupPrepend2">&#8377;</span>
+                                </div>
+                                <input type="text" class="form-control" name="incentive" id="incentive" min="0" placeholder="0" aria-describedby="inputGroupPrepend2" required>
+                              </div>
+                            </div>
+                            <small class="form-text text-muted" id="totalpay"></small>
                         </div>
+                        
                         <div class="form-group">
                             <label for="resume">Upload your resume</label>
                             <input type="file" name ="resume" class="form-control-file" id="resume" accept="application/pdf" required>
                             <small class="form-text text-muted">Please upload your resume (pdf only).</small>
                         </div>
+                        <div class="form-group">
+                            <label for="experience">Experience</label>
+                            <input type="number" name="experience" class="form-control" id="experience" placeholder="Enter your years of experience">
+                        </div>
+                        
                     {% endif %}
 
                     <div class="form-group">
@@ -104,4 +137,10 @@
         </div>
     </div>
 
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script src="{{url_for('static', filename= 'js/register.js')}}"></script>
 {% endblock %}

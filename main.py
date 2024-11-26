@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from applications.models import Users
 from applications.database import db
 from applications.config import Config
+import traceback
 
 loginManger = LoginManager()
 
@@ -41,9 +42,19 @@ def unauthorized():
     flash(('You need to log in first to access this page.', 'danger')) 
     return redirect(url_for('login')) 
 
+from applications.utils import Colors
+
 @app.errorhandler(Exception)
 def page_not_found(error):
-    print(f"error: {str(error)}")
+    error_details = traceback.format_exc()
+
+    # Get the URL that caused the error
+    requested_url = request.url
+
+    # Log the error details to console
+    print(f"{Colors.RED}Error Details: {error_details}")
+    print(f"{Colors.YELLOW}Requested URL: {requested_url}")
+    print(f"{Colors.RED}Error Summaray: {str(error)}{Colors.RESET}")
     return redirect(url_for('error'))
 
 if __name__ == '__main__':

@@ -8,4 +8,24 @@
 .hidden{
     display:none
 }
- 
+
+#userdetails{
+    text-align: center;
+    line-height: 1;
+}
+
+#name{
+    padding: 5px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+#userrole{
+    font-weight: 200;
+    font-style: normal;
+}
+
+.rounded-circle{
+    border-width: 3px !important
+}
