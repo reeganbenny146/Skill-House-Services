@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from applications.models import Users
 from applications.database import db
 from applications.config import Config
+from applications.uploadDummyData import addAdminDetails
 import traceback
 
 loginManger = LoginManager()
@@ -20,10 +21,12 @@ def create_app():
         loginManger.login_view = 'login'
         with app.app_context():
             db.create_all()
-            
+
+            addAdminDetails()
         return app
     except Exception as e:
         print("{exception_type}: {exception_message}")
+        return None
 
 app = create_app()
 
@@ -54,7 +57,7 @@ def page_not_found(error):
     # Log the error details to console
     print(f"{Colors.RED}Error Details: {error_details}")
     print(f"{Colors.YELLOW}Requested URL: {requested_url}")
-    print(f"{Colors.RED}Error Summaray: {str(error)}{Colors.RESET}")
+    print(f"{Colors.RED}Error Summary: {str(error)}{Colors.RESET}")
     return redirect(url_for('error'))
 
 if __name__ == '__main__':

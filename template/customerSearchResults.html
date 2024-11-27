@@ -42,6 +42,7 @@
                 <th>Service Name</th>
                 <th>Category</th>
                 <th>Base Price</th>
+                <th>No. of active Professionals</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -57,6 +58,7 @@
                 <td>{{service.name}}</td>
                 <td>{{service.category.name}}</td>
                 <td>{{service.basePrice}}</td>
+                <td>{{serviceCounts[service.id]}}</td>
                 <td>
                     <a href={{url_for('bookService', serviceId = service.id)}} class="btn btn-success">Book Now</a>
                 </td>

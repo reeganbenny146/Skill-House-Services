@@ -48,15 +48,21 @@ Home
           <div class="mb-3">
             <strong>Date Requested:</strong> {{serviceRequest.dateRequested}}
           </div>
-          <div class="mb-3">
-            <strong>Date Accepted:</strong> {{serviceRequest.dateAccepted}}
-          </div>
-          <div class="mb-3">
-            <strong>Date Completed:</strong> {{serviceRequest.dateCompleted}}
-          </div>
+          {% if serviceRequest.status != 4 %}
+            <div class="mb-3">
+              <strong>Date Accepted:</strong> {{serviceRequest.dateAccepted}}
+            </div>
+            <div class="mb-3">
+              <strong>Date Completed:</strong> {{serviceRequest.dateCompleted}}
+            </div>
+          {%else%}
+            <div class="mb-3">
+              <strong>Date Rejected:</strong> {{serviceRequest.dateRejected}}
+            </div>
+          {%endif%}
           <div class="mb-3">
             <strong>Total Amount:</strong> 
-            &#8377; {%if serviceRequest.status == 2 or serviceRequest.professional %} 
+            &#8377; {%if serviceRequest.status in [2,3] and serviceRequest.professional %} 
                       {{serviceRequest.service.basePrice + serviceRequest.professional.incentive }} ( &#8377;{{serviceRequest.service.basePrice}} + &#8377;{{serviceRequest.professional.incentive }})
                     {%else%}
                     N/A 
@@ -76,6 +82,7 @@ Home
             <span class="badge badge-danger">Rejected</span>
             {%endif%}
           </div>
+          {% if serviceRequest.status != 4 %}
           <div class="mb-3">
             <strong>Rating:</strong>
             {%if serviceRequest.status == 3%}
@@ -106,6 +113,7 @@ Home
               <span class="alert alert-warning">Customer needs to close the request</span>
             {%endif%}
           </div>
+          {%endif%}
           <!-- Action Buttons -->
           <div class="d-flex justify-content-center">
             <a href={{url_for('dashboard')}} class="btn btn-primary me-2" onclick="goBack()">Back</a>

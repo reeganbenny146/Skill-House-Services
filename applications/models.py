@@ -43,7 +43,7 @@ class Admin(db.Model, UserMixin):
     userId = db.Column(db.Integer, db.ForeignKey('users.id'))
     fname = db.Column(db.String(20), nullable = False)
     lname = db.Column(db.String(20), nullable = False)
-    profilePhotoPath = db.Column(db.String(20), default="../static/images/users/default-admin.jpg",nullable= False)
+    profilePhotoPath = db.Column(db.String(20), default="../static/images/users/default-admin.jpg",nullable= True)
 
 
 class Customers(db.Model, UserMixin):
@@ -189,7 +189,9 @@ class ServiceHistory(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True, nullable=False, autoincrement = True)
     dateRequested = db.Column(db.Date, default= datetime.now(), nullable = False)
     dateAccepted = db.Column(db.Date, nullable = True)
+    dateRejected = db.Column(db.Date, nullable = True)
     dateCompleted = db.Column(db.Date, nullable = True)
+    dateCanceled = db.Column(db.Date, nullable = True)
     customerId = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable= False)
     servicesId = db.Column(db.Integer, db.ForeignKey('services.id'), nullable= False)
     professionalId = db.Column(db.Integer, db.ForeignKey('professionals.id'), nullable = True)

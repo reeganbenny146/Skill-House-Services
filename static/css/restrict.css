@@ -32,3 +32,10 @@ body {
 .btn-home {
     border-radius: 20px;
 }
+
+.icon {
+    font-size: 100px;
+}
+.text-warning {
+    color: #ffc107 !important;
+}

@@ -19,6 +19,13 @@ Services
           <h5 class="service-title">{{service.name}}</h5>
           <p class="service-description">{{service.description}}</p>
           <p class="service-price">Base Price: &#8377;{{service.basePrice}}</p>
+          <p class="professionalNo">No. of Professionals:
+            {% if service.professionals and service.id in serviceCounts %}
+              {{serviceCounts[service.id]}}
+            {%else%}
+            0
+            {%endif%}
+          </p>
           <a href={{url_for('bookService', serviceId = service.id)}} class="btn btn-success">Book Now</a>
         </div>
       </div>

@@ -94,6 +94,7 @@
                 <th>Service Name</th>
                 <th>Category</th>
                 <th>Base Price</th>
+                <th>No. of Professionals</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -108,7 +109,8 @@
                 <td>{{loop.index}}</td>
                 <td>{{service.name}}</td>
                 <td>{{service.category.name}}</td>
-                <td>{{service.basePrice}}</td>
+                <td>{{service.basePrice}}&#8377;</td>
+                <td>{{service.professionals | length}}</td>
                 <td>
                     <button class="btn btn-primary btn-sm"  data-toggle="modal" data-target="#serviceEditModal"
                                         data-id={{service.id}} data-name="{{service.name}}" data-description="{{service.description}}" 

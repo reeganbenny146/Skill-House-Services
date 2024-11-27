@@ -6,6 +6,8 @@ import os
 from sqlalchemy import or_, and_
 from datetime import datetime
 from functools import wraps
+from applications.controllers import *
+import json
 
 # define decorator for active and inactive accounts
 def active_account(func):
@@ -13,9 +15,10 @@ def active_account(func):
     def wrapper(*args, **kwargs):
         if current_user.is_blocked:
             return render_template('blocked.html', user = current_user) 
-        
         if current_user.is_rejected:
             return render_template('reject.html', user = current_user)
+        if not current_user.is_approved:
+            return render_template('pending.html', user = current_user)
         return func(*args, **kwargs)
     return wrapper
 
@@ -130,6 +133,8 @@ def registration():
                 os.makedirs(os.path.dirname(profilePhotoPath), exist_ok=True)
                 image.save(profilePhotoPath)    
                 profilePhotoPath = '../static/images/users/' + new_filename 
+            else:
+                profilePhotoPath = "../static/images/users/default-user.jpg"
 
             user = Users.query.filter_by(email=email).first()
             if user:
@@ -241,10 +246,11 @@ def dashboard():
             serviceRequests = ServiceHistory.get_active_serviceHistory()
             serviceHistories = serviceRequests.filter(ServiceHistory.professionalId == user.professionalDetails.id).all()
             activeServiceRequests = serviceRequests.filter(ServiceHistory.status.in_([1, 2]), ServiceHistory.professionalId == user.professionalDetails.id).all()
-            newServiceRequests = serviceRequests.filter(and_(ServiceHistory.status == 0, ServiceHistory.is_requested == False), 
+            newServiceRequests = serviceRequests.filter(or_(and_(ServiceHistory.status == 0, ServiceHistory.is_requested == False), 
                                                                     and_(ServiceHistory.status == 0, ServiceHistory.is_requested == True, 
-                                                                         ServiceHistory.professionalId == user.professionalDetails.id),  
+                                                                         ServiceHistory.professionalId == user.professionalDetails.id)),  
                                                                          ServiceHistory.servicesId == user.professionalDetails.serviceId ).all()
+            
             return render_template('dashboard.html',user= user, newServiceRequests = newServiceRequests, activeServiceRequests = activeServiceRequests, serviceHistories = serviceHistories)
     except Exception as e:
         db.session.rollback()
@@ -273,7 +279,7 @@ def search():
                         services = []
                     serviceIds = [service.id for service in services]
                     if serviceIds:
-                        professionals = Professionals.get_all_professionals().filter(Professionals.id.in_(serviceIds)).all()
+                        professionals = Professionals.get_all_professionals().filter(Professionals.serviceId.in_(serviceIds)).all()
                     else:
                         professionals = []
 
@@ -288,7 +294,7 @@ def search():
                     services = Services.get_active_services().filter(Services.name.ilike(f'%{searchText}%')).all()
                     serviceIds = [service.id for service in services]
                     if serviceIds:
-                        professionals = Professionals.get_all_professionals().filter(Professionals.id.in_(serviceIds)).all()
+                        professionals = Professionals.get_all_professionals().filter(Professionals.serviceId.in_(serviceIds)).all()
                     else:
                         professionals = []
 
@@ -330,9 +336,9 @@ def search():
                     if serviceRequests:
                         serviceHistories = serviceRequests.filter(ServiceHistory.professionalId == user.professionalDetails.id).all()
                         activeServiceRequests = serviceRequests.filter(ServiceHistory.status.in_([1, 2]), ServiceHistory.professionalId == user.professionalDetails.id).all()
-                        newServiceRequests = serviceRequests.filter(and_(ServiceHistory.status == 0, ServiceHistory.is_requested == False), 
+                        newServiceRequests = serviceRequests.filter(or_(and_(ServiceHistory.status == 0, ServiceHistory.is_requested == False), 
                                                                     and_(ServiceHistory.status == 0, ServiceHistory.is_requested == True, 
-                                                                         ServiceHistory.professionalId == user.professionalDetails.id),  
+                                                                         ServiceHistory.professionalId == user.professionalDetails.id)),  
                                                                          ServiceHistory.servicesId == user.professionalDetails.serviceId ).all()
                     return render_template('searchResults.html',user = user, searchOption=searchOption, searchText = searchText, newServiceRequests = newServiceRequests, activeServiceRequests = activeServiceRequests, serviceHistories = serviceHistories)
                 if searchOption == 'pinCode':
@@ -347,9 +353,9 @@ def search():
                     if serviceRequests:
                         serviceHistories = serviceRequests.filter(ServiceHistory.professionalId == user.professionalDetails.id).all()
                         activeServiceRequests = serviceRequests.filter(ServiceHistory.status.in_([1, 2]), ServiceHistory.professionalId == user.professionalDetails.id).all()
-                        newServiceRequests = serviceRequests.filter(and_(ServiceHistory.status == 0, ServiceHistory.is_requested == False), 
+                        newServiceRequests = serviceRequests.filter(or_(and_(ServiceHistory.status == 0, ServiceHistory.is_requested == False), 
                                                                     and_(ServiceHistory.status == 0, ServiceHistory.is_requested == True, 
-                                                                         ServiceHistory.professionalId == user.professionalDetails.id),  
+                                                                         ServiceHistory.professionalId == user.professionalDetails.id)),  
                                                                          ServiceHistory.servicesId == user.professionalDetails.serviceId  ).all()
                     return render_template('searchResults.html',user = user, searchOption=searchOption, searchText = searchText, newServiceRequests = newServiceRequests, activeServiceRequests = activeServiceRequests, serviceHistories = serviceHistories)
                 
@@ -370,13 +376,27 @@ def search():
                     return render_template('searchResults.html',user = user, searchOption=searchOption, searchText = searchText, categories = categories, serviceHistories=serviceHistories)
                 if searchOption == 'Services':
                     services = Services.get_active_services().filter(Services.name.ilike(f'%{searchText}%')).all()
+                    serviceCounts = {}
+                    for service in services:
+                        count = sum(
+                            1 for professional in service.professionals 
+                            if (
+                                professional.is_approved and 
+                                not professional.is_blocked and 
+                                not professional.is_rejected and 
+                                professional.is_serviceAvailable and 
+                                not professional.is_deleted
+                            )
+                        )
+                        serviceCounts[service.id] = count
+
                     serviceIds = [service.id for service in services]
                     if serviceIds:
                         serviceRequests = ServiceHistory.get_active_serviceHistory().filter(ServiceHistory.servicesId.in_(serviceIds), ServiceHistory.customerId == user.customerDetails.id)
                         serviceHistories = serviceRequests.all()
                     else:
                         serviceHistories = []
-                    return render_template('searchResults.html',user = user, searchOption=searchOption, searchText = searchText, services = services, serviceHistories = serviceHistories)
+                    return render_template('searchResults.html',user = user, searchOption=searchOption, searchText = searchText, services = services, serviceCounts=serviceCounts, serviceHistories = serviceHistories)
                 if searchOption == 'Professionals':
                     professionalQuery = Professionals.get_all_professionals().filter(or_(Professionals.fname.ilike(f'%{searchText}%'), Professionals.lname.ilike(f'%{searchText}%')))
                     professionals = professionalQuery.filter_by(is_approved = True, is_blocked = False, is_rejected = False, is_serviceAvailable = True).all()
@@ -388,12 +408,10 @@ def search():
                         serviceHistories = []
                     return render_template('searchResults.html',user = user, searchOption = searchOption, searchText = searchText, professionals = professionals, serviceHistories = serviceHistories)
                 if searchOption == 'location':
-                    professionalQuery = Professionals.get_all_professionals().filter(Professionals.address.ilike(f'%{searchText}%'))
-                    professionals = professionalQuery.filter_by(is_approved = True, is_blocked = False, is_rejected = False, is_serviceAvailable = True).all()
+                    professionals = Professionals.get_active_professionals().filter(Professionals.address.ilike(f'%{searchText}%')).all()
                     return render_template('searchResults.html',user = user, searchOption=searchOption, searchText = searchText,professionals = professionals)
                 if searchOption == 'pinCode':
-                    professionalQuery = Professionals.get_all_professionals().filter(Professionals.pinCode == searchText)
-                    professionals = professionalQuery.filter_by(is_approved = True, is_blocked = False, is_rejected = False, is_serviceAvailable = True).all()
+                    professionals = Professionals.get_active_professionals().filter(Professionals.pinCode == searchText).all()
                     return render_template('searchResults.html',user = user, searchOption=searchOption, searchText = searchText, professionals = professionals)
                 
             return render_template('searchResults.html',user = user)
@@ -408,6 +426,7 @@ def search():
 # Category Routes and controllers
 @app.route('/new_category', methods= ['POST'])
 @login_required
+@active_account
 def addNewCategory():
     try:
         name = request.form.get('categoryName')
@@ -433,6 +452,7 @@ def addNewCategory():
     
 @app.route('/edit_category', methods= ['POST'])
 @login_required
+@active_account
 def editCategory():
     try:
         id = request.form.get('categoryId')
@@ -458,6 +478,7 @@ def editCategory():
 
 @app.route('/delete_category/<int:categoryId>')
 @login_required
+@active_account
 def deleteCategory(categoryId):
     try:
         category = Categories.query.get(categoryId)
@@ -473,6 +494,7 @@ def deleteCategory(categoryId):
 # Service Routes and controllers
 @app.route('/new_service', methods= ['POST'])
 @login_required
+@active_account
 def addNewService():
     try:
         name = request.form.get('serviceName')
@@ -505,6 +527,7 @@ def addNewService():
     
 @app.route('/edit_service', methods= ['POST'])
 @login_required
+@active_account
 def editService():
     try:
         serviceId = request.form.get('serviceId',None)
@@ -543,6 +566,7 @@ def editService():
 
 @app.route('/delete_service/<int:serviceId>')
 @login_required
+@active_account
 def deleteService(serviceId):
     try:
         service = Services.query.get(serviceId)
@@ -565,7 +589,20 @@ def deleteService(serviceId):
 def viewServices(categoryId):
     user = Users.query.get(current_user.id)
     services = Services.get_active_services_byId(categoryId).all()
-    return render_template('services.html', user=user, services = services)
+    serviceCounts = {}
+    for service in services:
+        count = sum(
+            1 for professional in service.professionals 
+            if (
+                professional.is_approved and 
+                not professional.is_blocked and 
+                not professional.is_rejected and 
+                professional.is_serviceAvailable and 
+                not professional.is_deleted
+            )
+        )
+        serviceCounts[service.id] = count
+    return render_template('services.html', serviceCounts = serviceCounts, user=user, services = services)
 
     
 # Professional Routes and controllers
@@ -603,7 +640,7 @@ def updateProfessionalReject(professionalId):
         return redirect(url_for('dashboard')) 
 
 @app.route('/update_professional_block/<int:professionalId>')
-@login_required   
+@login_required
 @active_account
 def updateProfessionalBlock(professionalId):
     try:
@@ -622,7 +659,8 @@ def updateProfessionalBlock(professionalId):
         return redirect(url_for('dashboard')) 
 
 @app.route('/delete_professional/<int:professionalId>')
-@login_required 
+@login_required
+@active_account
 def deleteProfessional(professionalId):
     try:
         professional = Professionals.query.get(professionalId)
@@ -638,7 +676,8 @@ def deleteProfessional(professionalId):
 # Customer routes for delete and block
 
 @app.route('/update_customer_block/<int:customerId>')
-@login_required   
+@login_required
+@active_account
 def updateCustomerBlock(customerId):
     try:
         customer = Customers.query.get(customerId)
@@ -656,7 +695,8 @@ def updateCustomerBlock(customerId):
         return redirect(url_for('dashboard')) 
 
 @app.route('/delete_customer/<int:customerId>')
-@login_required 
+@login_required
+@active_account
 def deleteCustomer(customerId):
     try:
         customer = Customers.query.get(customerId)
@@ -742,6 +782,7 @@ def rejectServiceRequest(serviceRequestId):
             flash(("Service request cannot reject if it in not requested by customer","danger"))
             return redirect(url_for(dashboard))
         serviceRequest.status = 4
+        serviceRequest.dateRejected = datetime.now()
         db.session.commit()
         flash(("Service request have successfully rejected","warning"))
         return redirect(url_for(dashboard))
@@ -806,6 +847,7 @@ def deleteServiceRequest(serviceRequestId):
             return redirect(url_for(dashboard))
         
         serviceRequest.status = 5
+        serviceRequest.dateCanceled = datetime.now()
         serviceRequest.soft_delete()
         db.session.commit()
         flash(("Service request have successfully deleted","warning"))
@@ -863,6 +905,28 @@ def serviceReview(serviceRequestId):
         flash(("Review has successfully added","success"))
         return redirect(url_for('dashboard'))
     
+
+# Summary Routes 
+@app.route('/summary')
+@login_required 
+@active_account
+def summary():
+    if current_user.role == 'admin':
+        serviceRequestlabels, serviceRequestdatasets = getServiceRequestStackBarChartData(current_user)
+        professionallabels, professionaldatasets = getProfessionalStackBarChartData()
+        statusLabels, statusdata = getServiceRequestStatus(current_user)
+    elif current_user.role == 'client':
+        serviceRequestlabels, serviceRequestdatasets = getServiceRequestStackBarChartData(current_user)
+        statusLabels, statusdata = getServiceRequestStatus(current_user)
+        professionallabels, professionaldatasets = "", ""
+    else:
+        statusLabels, statusdata = getServiceRequestStatus(current_user)
+        professionallabels, professionaldatasets = "", ""
+        serviceRequestlabels, serviceRequestdatasets = "", ""
+    print(serviceRequestlabels)
+    return render_template("summary.html", user= current_user, serviceRequestlabels=json.dumps(serviceRequestlabels),  serviceRequestdatasets = json.dumps(serviceRequestdatasets),
+                            professionallabels=json.dumps(professionallabels),  professionaldatasets = json.dumps(professionaldatasets) ,
+                              statusLabels = json.dumps(statusLabels), statusdata = json.dumps(statusdata))
 
 @app.route('/logout')
 @login_required

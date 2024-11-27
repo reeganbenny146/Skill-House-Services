@@ -1,0 +1,96 @@
+
+{%extends 'base.html'%}
+{%block title%}
+Home
+{%endblock%}
+{%block extra_css%} 
+<link rel="stylesheet" href="../static/css/summary.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% endblock%}
+
+{%block content%}
+{% include 'nav.html'%}
+
+    <div class="container summary-content mt-5">
+        {%include 'messages.html'%}
+        <div class="row justify-content-center">
+            {% if user.role == 'admin' %}
+            <!-- Services vs Service Requests -->
+            <div class="col-xs-10 col-sm-6 col-md-6">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="services_vs_serviceRequests"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-10 col-sm-6 col-md-6">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="services_vs_professionals"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-10 col-sm-6 col-md-6 mt-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="statusPieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% elif user.role == 'professional' %}
+            <div class="col-xs-10 col-sm-6 col-md-6 mt-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="statusPieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {%elif user.role == 'client' %}
+            <div class="col-xs-10 col-sm-6 col-md-6">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="services_vs_serviceRequests"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xs-10 col-sm-6 col-md-6 mt-3">
+                <div class="card card-style mb-2">
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative;">
+                            <canvas id="statusPieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {%endif%}
+        </div>
+    </div>
+{% endblock %}
+{%block extra_js%} 
+<script>
+    const serviceRequestlabels =  JSON.parse('{{serviceRequestlabels | safe}}');
+    const serviceRequestdatasets = JSON.parse('{{serviceRequestdatasets | safe }}');
+    const professionallabels =  JSON.parse('{{professionallabels | safe}}');
+    const professionaldatasets = JSON.parse('{{professionaldatasets | safe }}');
+    const statusLabels =  JSON.parse('{{statusLabels | safe}}');
+    const statusdata = JSON.parse('{{statusdata | safe }}');
+</script>
+
+<script src="{{url_for('static', filename= 'js/summary.js')}}" defer></script>
+
+
+{% endblock%}
