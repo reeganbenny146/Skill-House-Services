@@ -145,6 +145,7 @@
                 <th>Resume</th>
                 <th>Service Name</th>
                 <th>Incentive</th>
+                <th>Ratings(AVG)</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -158,6 +159,21 @@
                 <td><a href="{{professional.resumePath}}" class="btn btn-sm btn-outline-info" target="_blank">view resume</a></td>
                 <td>{{professional.service.name}}</td>
                 <td>{{professional.incentive}}&#8377;</td>
+                <td>{%if professional.reviews%}
+                    {% set avgRating = 0 %}
+                    {% set rating = namespace(totalRating = 0) %}
+                    {% set count = namespace(totalCount = 0) %}
+                    {%for review in professional.reviews%}
+                        {%set rating.totalRating = rating.totalRating + review.rating %}
+                        {% set count.totalCount = count.totalCount + 1 %}
+                    {%endfor%}
+                    {%if count.totalCount != 0%}
+                    {%set avgRating = rating.totalRating / count.totalCount  %}
+                    {{avgRating}}/5
+                    {%else%}
+                    --
+                    {%endif%}
+                {%else%}--{%endif%}</td>
                 <td>
                     <span class="mt-1 badge badge-{% if professional.is_blocked or professional.is_rejected %}danger{%elif not professional.is_approved or not professional.is_serviceAvailable %}warning{%else%}success{%endif%}">
                         {% if professional.is_blocked %}Blocked{%elif professional.is_rejected %}Rejected{%elif not professional.is_serviceAvailable %}Service Unavailable{%elif professional.is_approved %}Approved{%else%}Pending{%endif%}

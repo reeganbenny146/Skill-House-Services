@@ -1,0 +1,82 @@
+<form class="mt-4">
+    <div class="form-group text-center">
+        <img id="avatarPreview" class="avatar" src={{user.professionalDetails.profilePhotoPath}} alt="Profile Avatar">
+        <br>
+        <label for="username">Role: {{user.role}}</label>
+    </div>
+    
+    <div class="form-group">
+        <a href="{{user.professionalDetails.resumePath}}" class="btn btn-sm btn-outline-info" target="_blank">view resume</a>
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="firstName">First Name</label>
+            <input type="text" name = "firstName" class="form-control" id="firstName" value ={{user.professionalDetails.fname}} readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="lastName">Last Name</label>
+            <input type="text" name = "lastName" class="form-control" id="lastName" value ={{user.professionalDetails.lname}} readonly>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" name="username" class="form-control" id="username" value ={{user.username}} readonly >
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" name="email" class="form-control" id="email" value ={{user.email}} readonly>
+    </div>
+
+    <div class="form-group">
+        <label for="address">Address</label>
+        <textarea class="form-control" name="address" id="address" rows="3" readonly>{{user.professionalDetails.address}}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="mobile">Mobile Number</label>
+        <input type="tel" name="mobileNumber" class="form-control" id="mobile" value = {{user.professionalDetails.mobileNo}} readonly>
+    </div>
+
+    <div class="form-group">
+        <label for="pincode">Enter Pin Code:</label>
+        <input type="text" name="pincode" id="pincode" class="form-control" name="pincode" value = {{user.professionalDetails.pinCode}} readonly>
+    </div>
+    
+    <div class="form-group">
+        <label for="pincode">Service Selected:</label>
+        <input type="text" name="pincode" id="pincode" class="form-control" name="pincode" value = {{user.professionalDetails.pinCode}} readonly>
+    </div>
+    {%set basicPay = user.professionalDetails.service.basePrice if user.professionalDetails.service else 0 %}
+    {%set totalpay = user.professionalDetails.incentive + basicPay %}
+    <div class="form-row form-group">
+        <div class="col-md-6">
+            <label for="basicpay">Basic Pay</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupPrepend1">&#8377;</span>
+              </div>
+              <input type="number" class="form-control" id="basicpay" aria-describedby="inputGroupPrepend1" value={{basicPay}} readonly>
+            </div>
+          </div>
+        <div class="col-md-6">
+          <label for="incentive">Incentive</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroupPrepend2">&#8377;</span>
+            </div>
+            <input type="text" class="form-control" name="incentive" id="incentive"  aria-describedby="inputGroupPrepend2" value={{user.professionalDetails.incentive}} readonly>
+          </div>
+        </div>
+        <small class="form-text text-muted" id="totalpay">Total pay = {{totalpay}}</small>
+    </div>
+
+    <div class="form-group">
+        <label for="experience">Experience</label>
+        <input type="number" name="experience" class="form-control" id="experience" value={{user.professionalDetails.experience}} readonly>
+    </div>
+
+
+</form>

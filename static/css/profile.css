@@ -1,0 +1,20 @@
+.reg{
+    padding-top: 56px;
+}
+
+.text-success{
+    text-decoration: underline;
+}
+
+.profile-content {
+    padding-top: 5px;
+}
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover; /* Ensure the image fits properly */
+    border: 2px solid #ddd; /* Optional border */
+    margin-bottom: 15px; /* Space between image and input */
+}

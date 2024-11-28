@@ -1,0 +1,29 @@
+<form class="mt-4">
+
+    <div class="form-group text-center">
+        <img id="avatarPreview" class="avatar" src={{user.adminDetails.profilePhotoPath}} alt="Profile Avatar">
+        <br>
+        <label for="username">Role: {{user.role}}</label>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="firstName">First Name</label>
+            <input type="text" name = "firstName" class="form-control" id="firstName" value ={{user.adminDetails.fname}} readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="lastName">Last Name</label>
+            <input type="text" name = "lastName" class="form-control" id="lastName" value ={{user.adminDetails.lname}} readonly>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" name="username" class="form-control" id="username" value ={{user.username}} readonly >
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" name="email" class="form-control" id="email" value ={{user.email}} readonly>
+    </div>
+</form>

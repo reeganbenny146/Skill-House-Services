@@ -1,0 +1,44 @@
+<form class="mt-4">
+    <div class="form-group text-center">
+        <img id="avatarPreview" class="avatar" src={{user.customerDetails.profilePhotoPath}} alt="Profile Avatar">
+        <br>
+        <label for="username">Role: {{user.role}}</label>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="firstName">First Name</label>
+            <input type="text" name = "firstName" class="form-control" id="firstName" value ={{user.customerDetails.fname}} readonly>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="lastName">Last Name</label>
+            <input type="text" name = "lastName" class="form-control" id="lastName" value ={{user.customerDetails.lname}} readonly>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" name="username" class="form-control" id="username" value ={{user.username}} readonly >
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" name="email" class="form-control" id="email" value ={{user.email}} readonly>
+    </div>
+
+    <div class="form-group">
+        <label for="address">Address</label>
+        <textarea class="form-control" name="address" id="address" rows="3" readonly>{{user.customerDetails.address}}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="mobile">Mobile Number</label>
+        <input type="tel" name="mobileNumber" class="form-control" id="mobile" value = {{user.customerDetails.mobileNo}} readonly>
+    </div>
+
+    <div class="form-group">
+        <label for="pincode">Enter Pin Code:</label>
+        <input type="text" name="pincode" id="pincode" class="form-control" name="pincode" value = {{user.customerDetails.pinCode}} readonly>
+    </div>
+
+</form>

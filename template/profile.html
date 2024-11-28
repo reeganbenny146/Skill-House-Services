@@ -1,0 +1,23 @@
+
+{%extends 'base.html'%}
+{%block title%}
+profile
+{%endblock%}
+{%block extra_css%} 
+<link rel="stylesheet" href="../static/css/profile.css">
+{% endblock%}
+
+{%block content%}
+{% include 'nav.html'%}
+
+    <div class="container profile-content mt-5">
+        {%include 'messages.html'%}
+        {% if user.role == 'admin' %}
+        {%include 'adminProfile.html'%}
+        {% elif user.role == 'professional' %}
+        {%include 'professionalProfile.html'%}
+        {%elif user.role == 'client' %}
+        {%include 'customerProfile.html'%}
+        {%endif%}
+    </div>
+{% endblock %}

@@ -102,6 +102,9 @@ class Professionals(db.Model, UserMixin):
     is_deleted = db.Column(db.Boolean, default = False, nullable = False) # For Soft Delete
 
     serviceHistoryList = db.relationship("ServiceHistory", backref= 'professional', lazy = True)
+    reviews = db.relationship("Reviews", secondary = "serviceHistory", primaryjoin="Professionals.id == ServiceHistory.professionalId",
+        secondaryjoin="ServiceHistory.reviewsId == Reviews.id",
+        viewonly=True)
 
     def soft_delete(self):
         self.is_deleted = True

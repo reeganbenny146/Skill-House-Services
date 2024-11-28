@@ -221,6 +221,12 @@ def registration():
         return redirect(url_for('registration'))
 
 
+# user profile
+@app.route('/profile')
+@login_required
+def viewProfile():
+    return render_template('profile.html', user = current_user)
+
 # User dashboard
 @app.route('/')
 @login_required
