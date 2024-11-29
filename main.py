@@ -5,6 +5,7 @@ from applications.models import Users
 from applications.database import db
 from applications.config import Config
 from applications.uploadDummyData import addAdminDetails
+from applications.apiRoutes import initializeUserRoutes
 import traceback
 
 loginManger = LoginManager()
@@ -30,6 +31,9 @@ def create_app():
 
 app = create_app()
 
+api = Api(app)
+initializeUserRoutes(api)
+
 # Loading logged In user
 @loginManger.user_loader
 def load_user(user_id):
@@ -37,7 +41,7 @@ def load_user(user_id):
 
 from applications.routes import *
 
-api = Api(app)
+
 
 
 @loginManger.unauthorized_handler
